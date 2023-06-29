@@ -12,7 +12,8 @@ const Campus = db.define("Campus", {
   imageUrl: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: "default_image_url.jpg",
+    defaultValue:
+      "https://cdn.imgbin.com/0/6/8/imgbin-university-school-college-computer-icons-student-school-NCzwUsayDCvcspJ9EXtjwXP3U.jpg",
   },
   address: {
     type: DataTypes.STRING,

@@ -26,7 +26,8 @@ const Student = db.define("Student", {
   imageUrl: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: "default_image_url.jpg",
+    defaultValue:
+      "https://img.favpng.com/4/7/17/mountview-academy-of-theatre-arts-silhouette-female-png-favpng-w38HZe4aWEJmpHFtsLXCc7Aqu_t.jpg",
   },
   gpa: {
     type: DataTypes.DECIMAL(3, 1),
