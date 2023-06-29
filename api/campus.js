@@ -3,6 +3,7 @@ const router = express.Router();
 const { Campus, Student } = require("../db/models");
 
 // root is localhost:3000/api/campus
+// get all campuses
 router.get("/", async (req, res, next) => {
   try {
     const allCampuses = await Campus.findAll();
@@ -14,6 +15,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// get campus by id
 router.get("/:id", async (req, res) => {
   try {
     const campusId = req.params.id;
@@ -33,6 +35,25 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving campus:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// add new campus
+router.post("/", async (req, res) => {
+  try {
+    const { name, imageUrl, address, description } = req.query;
+
+    const addedCampus = await Campus.create({
+      name,
+      imageUrl,
+      address,
+      description,
+    });
+    addedCampus
+      ? res.status(200).json(addedCampus)
+      : res.status(404).send("Campus could not be added");
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add campus" });
   }
 });
 

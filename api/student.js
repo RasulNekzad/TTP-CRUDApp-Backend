@@ -3,6 +3,7 @@ const router = express.Router();
 const { Campus, Student } = require("../db/models");
 
 // root is localhost:3000/api/student
+// get all students
 router.get("/", async (req, res, next) => {
   try {
     const allStudents = await Student.findAll();
@@ -14,6 +15,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// get student by id
 router.get("/:id", async (req, res) => {
   try {
     const studentId = req.params.id;
@@ -31,6 +33,26 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving student:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// add new student
+router.post("/", async (req, res) => {
+  try {
+    const { firstName, lastName, email, imageUrl, gpa } = req.query;
+
+    const addedStudent = await Student.create({
+      firstName,
+      lastName,
+      email,
+      imageUrl,
+      gpa,
+    });
+    addedStudent
+      ? res.status(200).json(addedStudent)
+      : res.status(404).send("Student could not be added");
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add student" });
   }
 });
 
