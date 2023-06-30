@@ -25,6 +25,7 @@ const Campus = db.define("Campus", {
   description: {
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: "Default description.",
   },
 });
 
