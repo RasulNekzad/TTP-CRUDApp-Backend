@@ -54,7 +54,7 @@ router.post("/", jsonParser, async (req, res) => {
     });
     addedStudent
       ? res.status(200).json(addedStudent)
-      : res.status(404).send("Student could not be added");
+      : res.status(400).send("Student could not be added");
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to add student" });
@@ -70,6 +70,33 @@ router.delete("/:id", async (req, res, next) => {
     DeleteStudent
       ? res.status(200).send("Successfully removed student")
       : res.status(404).send("Student not found.");
+  } catch (error) {
+    next(error);
+  }
+});
+
+// update student by id
+router.put("/:id", jsonParser, async (req, res, next) => {
+  try {
+    console.log(req.query.id);
+    const { firstName, lastName, email, imageUrl, gpa, CampusId } = req.body;
+    const updatedStudent = await Student.update(
+      {
+        firstName,
+        lastName,
+        email,
+        imageUrl,
+        gpa,
+        CampusId,
+      },
+      {
+        where: { id: req.params.id },
+        returning: true,
+      }
+    );
+    updatedStudent
+      ? res.status(200).json({ newData: updatedStudent[1][0].dataValues })
+      : res.status(404).send("Student could not be found.");
   } catch (error) {
     next(error);
   }

@@ -76,4 +76,28 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+// update campus by id
+router.put("/:id", jsonParser, async (req, res, next) => {
+  try {
+    const { name, imageUrl, address, description } = req.body;
+    const updatedCampus = await Campus.update(
+      {
+        name,
+        imageUrl,
+        address,
+        description,
+      },
+      {
+        where: { id: req.params.id },
+        returning: true,
+      }
+    );
+    updatedCampus
+      ? res.status(200).json({ newData: updatedCampus[1][0].dataValues })
+      : res.status(404).send("Campus could not be found");
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
