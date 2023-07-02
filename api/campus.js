@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
     const allCampuses = await Campus.findAll();
     allCampuses
       ? res.status(200).json(allCampuses)
-      : res.status(404).send("Campus List Not Found");
+      : res.status(404).json({ message: "Campus List Not Found" });
   } catch (error) {
     next(error);
   }
@@ -54,8 +54,10 @@ router.post("/", jsonParser, async (req, res) => {
       description,
     });
     addedCampus
-      ? res.status(200).json(addedCampus)
-      : res.status(404).send("Campus could not be added");
+      ? res
+          .status(200)
+          .json({ message: "Successfully added campus!", addedCampus })
+      : res.status(404).json({ message: "Campus could not be added" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to add campus" });
@@ -69,8 +71,8 @@ router.delete("/:id", async (req, res, next) => {
       where: { id: req.params.id },
     });
     DeleteCampus
-      ? res.status(200).send("Successfully removed campus")
-      : res.status(404).send("Campus not found.");
+      ? res.status(200).json({ message: "Successfully removed campus" })
+      : res.status(404).json({ message: "Campus not found." });
   } catch (error) {
     next(error);
   }
@@ -93,8 +95,11 @@ router.put("/:id", jsonParser, async (req, res, next) => {
       }
     );
     updatedCampus
-      ? res.status(200).json({ newData: updatedCampus[1][0].dataValues })
-      : res.status(404).send("Campus could not be found");
+      ? res.status(200).json({
+          message: "Successfully updated campus!",
+          newData: updatedCampus[1][0].dataValues,
+        })
+      : res.status(404).json({ message: "Campus could not be found" });
   } catch (error) {
     next(error);
   }

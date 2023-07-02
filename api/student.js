@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
     const allStudents = await Student.findAll();
     allStudents
       ? res.status(200).json(allStudents)
-      : res.status(404).send("Student List Not Found");
+      : res.status(404).json({ message: "Student List Not Found" });
   } catch (error) {
     next(error);
   }
@@ -53,8 +53,10 @@ router.post("/", jsonParser, async (req, res) => {
       gpa,
     });
     addedStudent
-      ? res.status(200).json(addedStudent)
-      : res.status(400).send("Student could not be added");
+      ? res
+          .status(200)
+          .json({ message: "Successfully added student!", addedStudent })
+      : res.status(400).json({ message: "Student could not be added" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to add student" });
@@ -68,8 +70,8 @@ router.delete("/:id", async (req, res, next) => {
       where: { id: req.params.id },
     });
     DeleteStudent
-      ? res.status(200).send("Successfully removed student")
-      : res.status(404).send("Student not found.");
+      ? res.status(200).json({ message: "Successfully deleted student" })
+      : res.status(404).json({ message: "Student not found." });
   } catch (error) {
     next(error);
   }
@@ -78,8 +80,15 @@ router.delete("/:id", async (req, res, next) => {
 // update student by id
 router.put("/:id", jsonParser, async (req, res, next) => {
   try {
-    console.log(req.query.id);
+    console.log(req.params.id);
     const { firstName, lastName, email, imageUrl, gpa, CampusId } = req.body;
+    if (CampusId) {
+      const result = await Campus.findByPk(CampusId);
+      if (!result) {
+        return res.status(400).json({ message: "Campus doesn't exist." });
+      }
+    }
+
     const updatedStudent = await Student.update(
       {
         firstName,
@@ -95,9 +104,13 @@ router.put("/:id", jsonParser, async (req, res, next) => {
       }
     );
     updatedStudent
-      ? res.status(200).json({ newData: updatedStudent[1][0].dataValues })
-      : res.status(404).send("Student could not be found.");
+      ? res.status(200).json({
+          message: "Successfully updated student!",
+          newData: updatedStudent[1][0].dataValues,
+        })
+      : res.status(404).json({ message: "Student could not be found." });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
