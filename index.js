@@ -14,6 +14,13 @@ app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message:
+      "Rasul Nekzad's CRUD app backend. Enjoy exploring! Made with ❤️ in NYC.",
+  });
+});
+
 syncDB();
 
 module.exports = app;
