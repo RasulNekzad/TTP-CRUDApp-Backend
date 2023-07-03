@@ -8,7 +8,7 @@ const PORT = 8080;
 
 app.use(cors());
 app.use("/api", require("./api"));
-const syncDB = () => db.sync({ force: true });
+const syncDB = () => db.sync({ force: false });
 
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
